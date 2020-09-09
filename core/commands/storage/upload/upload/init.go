@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/TRON-US/go-btfs/core/commands/storage/challenge"
@@ -232,7 +233,10 @@ the shard and replies back to client for the next challenge step.`,
 							if err == nil {
 								break
 							}
-							time.Sleep(30 * time.Second)
+							if strings.Contains(err.Error(), "question not ready") {
+								time.Sleep(60 * time.Second)
+								i--
+							}
 						}
 						return err
 					})
